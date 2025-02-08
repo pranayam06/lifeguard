@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const port = 8080;
-const filePath = 'data.json';
+const filePath = './data.json';
 
 // Middleware
 app.use(cors());
