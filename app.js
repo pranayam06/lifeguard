@@ -41,8 +41,45 @@ function addData(newEntry) {
     return data;
 }
 
+/*app.post('/petitions/sign', (req, res) => {
+    try {
+        const { username } = req.body;
+        console.log('Signing petition for username:', username); // Debug log
+        
+        const data = readData();
+        const user = data.find(u => u.username === username);
+        
+        if (user) {
+            // Initialize signed if it doesn't exist
+            if (typeof user.signed !== 'number') {
+                user.signed = 0;
+            }
+            
+            // Increment the signed counter
+            user.signed += 1;
+            console.log('Updated signed count:', user.signed); // Debug log
+            
+            // Save the updated data
+            writeData(data);
+            
+            res.json({ 
+                message: 'Petition signed successfully', 
+                stats: {
+                    totalSigned: user.signed
+                }
+            });
+        } else {
+            console.log('User not found:', username); // Debug log
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error signing petition:', error);
+        res.status(500).json({ error: 'Failed to sign petition' });
+    }
+});*/
+
 // Add function to handle petition signatures
-function addPetitionSignature(userId, petitionId) {
+/*function addPetitionSignature(userId, petitionId) {
     const data = readData();
     const user = data.find(u => u.username === userId);
     
@@ -57,7 +94,7 @@ function addPetitionSignature(userId, petitionId) {
         return user.signedPetitions;
     }
     return null;
-}
+}*/
 
 // Update root route to include new endpoints
 app.get('/', (req, res) => {
@@ -181,55 +218,39 @@ app.get('/petitions', (req, res) => {
     }
 });
 
-// Add endpoint to sign a petition
-app.post('/petitions/sign', (req, res) => {
-    try {
-        const { username, petitionId } = req.body;
-        const signedPetitions = addPetitionSignature(username, petitionId);
-        
-        if (signedPetitions) {
-            res.json({ 
-                message: 'Petition signed successfully', 
-                signedPetitions,
-                stats: {
-                    totalSigned: signedPetitions.length
-                }
-            });
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to sign petition' });
-    }
-});
-
 // Add endpoint to get user's petition statistics
 app.get('/petitions/user/:username', (req, res) => {
     try {
         const data = readData();
         const user = data.find(u => u.username === req.params.username);
         
-        if (user && user.signedPetitions) {
+        if (user) {
+            // Check if signedPetitions exists and is an array
+            const signedCount = user.signedPetitions ? user.signedPetitions.filter(p => p == null).length : 0;
+            console.log(signedCount);
             res.json({
                 username: user.username,
-                signedPetitions: user.signedPetitions,
+                signed: signedCount,
                 stats: {
-                    totalSigned: user.signedPetitions.length
+                    totalSigned: signedCount
                 }
-            });
+            }); 
+            console.log(res.json());
         } else {
             res.json({
                 username: req.params.username,
-                signedPetitions: [],
+                signed: 0,
                 stats: {
                     totalSigned: 0
                 }
             });
         }
     } catch (error) {
+        console.error('Error fetching user petition data:', error);
         res.status(500).json({ error: 'Failed to fetch user petition data' });
     }
 });
+
 
 // Start the server
 const PORT = 3000;

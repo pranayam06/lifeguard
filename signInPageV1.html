@@ -153,6 +153,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === 'Login successful') {
+                        // Store username in localStorage
+                        localStorage.setItem('currentUser', username);
                         window.location.href = '/dashboard.html';
                     } else {
                         alert('Login failed: ' + data.error);
@@ -178,31 +180,6 @@
                     username: username,
                     password: password,
                     signed:0
-                };
-    
-                fetch('http://localhost:3000/data', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newUser)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Sign-up successful! You can now log in.');
-                })
-                function handleSignUp() {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                if (!username || !password) {
-                    alert('Please enter a username and password.');
-                    return;
-                    }
-                    const newUser = {
-                    id: Date.now(),
-                    username: username,
-                    password: password,
-                    signed: 0
-                    }
                 };
     
                 fetch('http://localhost:3000/data', {

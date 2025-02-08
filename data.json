@@ -2,22 +2,92 @@
   {
     "username": "riya",
     "password": "riya",
-    "signed": 0
+    "signed": 0,
+    "signedPetitions": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
   },
   {
     "username": "rohan",
     "password": "rohan",
-    "signed": 0
+    "signed": 0,
+    "signedPetitions": [
+      null,
+      null
+    ]
   },
   {
     "username": "pranaya",
     "password": "pranaya",
-    "signed": 0
+    "signed": 0,
+    "signedPetitions": [
+      null,
+      null
+    ]
   },
   {
     "username": "vaish",
     "password": "vaish",
-    "signed": 0
+    "signed": 0,
+    "signedPetitions": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
   },
   {
     "id": 1739007643807,

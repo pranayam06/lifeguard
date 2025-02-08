@@ -11,6 +11,23 @@
             --dark: #1a1a1a;
             --light: #f5f5f5;
         }
+ /* Container for iframes */
+.iframe-container {
+    display: flex;
+    flex-direction: column; /* Stack iframes vertically */
+    gap: 1rem; /* Space between iframes */
+    margin-top: 1rem; /* Space below the heading */
+}
+
+/* Style for sentiment analysis iframes */
+.sentiment-iframe {
+    width: 100%; /* Full width of the container */
+    height: 410px; /* Fixed height */
+    border: none; /* Remove iframe border */
+    border-radius: 8px; /* Match card's border radius */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+    overflow: hidden; /* Hide scrollbars */
+}
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
@@ -136,6 +153,10 @@
             cursor: not-allowed;
         }
 
+        #petition-card {
+            height:20%;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -209,15 +230,16 @@
                 <h2>📍 Find Help Near You</h2>
                 <div id="map"></div>
             </div>
-            <div class="card">
+            
+            <div class="card" id="petition-card">
                 <h2>✍️ Active Petitions</h2>
                 <div id="petitions-list"></div>
                 <div class="petition-stats">
                     <h3>Your Impact</h3>
-                    <div class="progress-container">
+                    <!--<div class="progress-container">
                         <div id="petition-progress" class="progress-bar"></div>
-                    </div>
-                    <p>You've signed <span id="signed-count">0</span> out of <span id="total-count">0</span> petitions</p>
+                    </div>-->
+                    <p id="signed-count"> </p>
                 </div>
                 <button onclick="openPetitionModal()" class="button">Sign a Petition</button>
             </div>
@@ -232,10 +254,11 @@
             </div>
             <div class="card" style="grid-column: span 2;">
                 <h2> 📊 Sentiment Analysis </h2>
-                <iframe src="graph1.html" ></iframe>
-                <iframe src="graph2.html" ></iframe>
-            </div> 
-        </div>
+                <div class="iframe-container">
+                    <iframe src="graph1.html" class="sentiment-iframe"></iframe>
+                    <iframe src="graph2.html" class="sentiment-iframe"></iframe>
+                </div>
+            </div>
     </div>
 
     <!-- Load Leaflet JS -->
@@ -255,72 +278,89 @@
         // Add this at the start of your script section
         const API_BASE_URL = 'http://localhost:3000';
 
-        // Add this to handle current user
-        let currentUser = 'demo'; // Replace with actual user authentication
+        // Replace the hardcoded currentUser with this
+        let currentUser = localStorage.getItem('currentUser');
 
+        // Add this check at the start of your script
+        if (!currentUser) {
+            // Redirect to login if no user is found
+            window.location.href = '/signInPageV1.html';
+        }
 
+        console.log('Current user:', currentUser);
 
         // Petition handling code
         async function loadPetitions() {
-            try {
+           // try {
                 const response = await fetch('http://localhost:3000/petitions');
                 const petitions = await response.json();
-                const userResponse = await fetch(`http://localhost:3000/petitions/user/${currentUser}`);
-                const userData = await userResponse.json();
+                const userResponse = await fetch(`http://localhost:3000/petitions/user/${currentUser}`); 
+                console.log(currentUser);
+                const userData = await userResponse.json(); 
+                console.log(userData);
+
                 
                 const petitionsList = document.getElementById('petitions-list');
                 petitionsList.innerHTML = '';
                 
                 petitions.forEach(petition => {
-                    const isSigned = userData.signedPetitions.includes(petition.id);
                     const petitionElement = document.createElement('div');
-                    petitionElement.className = `petition-item ${isSigned ? 'signed' : ''}`;
+                    petitionElement.className = `petition-item`;
                     petitionElement.innerHTML = `
                         <h3>${petition.title}</h3>
                         <a href="${petition.url}" target="_blank">View Petition</a>
                         <button 
                             class="sign-button" 
                             onclick="signPetition(${petition.id})"
-                            ${isSigned ? 'disabled' : ''}
                         >
-                            ${isSigned ? 'Signed ✓' : 'Sign Petition'}
+                            Sign Petition
                         </button>
                     `;
                     petitionsList.appendChild(petitionElement);
                 });
 
-                // Update statistics
-                document.getElementById('signed-count').textContent = userData.stats.totalSigned;
-                document.getElementById('total-count').textContent = petitions.length;
-                
+                // Update statistics using the signed counter 
+                console.log(document.getElementById('signed-count').textContent);
+                document.getElementById('signed-count').innerHTML = userData['signedPetitions'].length;
+                console.log(userData['signedPetitions'].length);
                 // Update progress bar
-                const progress = (userData.stats.totalSigned / petitions.length) * 100;
-                document.getElementById('petition-progress').style.width = `${progress}%`;
-            } catch (error) {
-                console.error('Failed to load petitions:', error);
-            }
+                const progress = (userData.signed / petitions.length) * 100;
+                //document.getElementById('petition-progress').style.width = `${progress}%`;
+            //} catch (error) {
+              //  console.error('Failed to load petitions:', error);
+            //}  
+
+           // document.getElementById('signed-count').textContent = userData['signedPetitions'].length;
+
         }
 
-        async function signPetition(petitionId) {
-            try {
-                const response = await fetch('http://localhost:3000/petitions/sign', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: currentUser,
-                        petitionId: petitionId
-                    })
-                });
-                
-                if (response.ok) {
-                    loadPetitions(); // Refresh the petitions list
-                }
-            } catch (error) {
-                console.error('Failed to sign petition:', error);
-            }
+        
+
+async function signPetition(event, petitionId) {
+    event.preventDefault(); // Prevent the page from reloading
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/petitions/sign`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: currentUser  // Only send username
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
+        loadModalPetitions(); // Refresh the modal list
+        loadPetitions(); // Refresh the main petitions list if it exists
+    } catch (error) {
+        console.error('Failed to sign petition:', error);
+        alert('Failed to sign petition. Please try again.');
+    }
+}
 
         // Load petitions when the page loads
         // You'll need to call this after user authentication
@@ -357,61 +397,41 @@
                 petitionsList.innerHTML = '';
                 
                 petitions.forEach(petition => {
-                    const isSigned = userData.signedPetitions.includes(petition.id);
                     const petitionElement = document.createElement('div');
-                    petitionElement.className = `petition-item ${isSigned ? 'signed' : ''}`;
+                    petitionElement.className = `petition-item`;
                     petitionElement.innerHTML = `
                         <h3>${petition.title}</h3>
                         <p>${petition.description || 'Support this important cause!'}</p>
                         <a href="${petition.url}" target="_blank" class="button">View Details</a>
                         <button 
-                            class="sign-button" 
-                            onclick="signPetition(${petition.id})"
-                            ${isSigned ? 'disabled' : ''}
-                        >
-                            ${isSigned ? 'Signed ✓' : 'Sign Now'}
-                        </button>
+    class="sign-button" 
+    onclick="signPetition(event, ${petition.id})"
+>
+    Sign Now
+</button>
                     `;
                     petitionsList.appendChild(petitionElement);
-                });
+                }); 
+                console.log(document.getElementById('signed-count').textContent);
+                document.getElementById('signed-count').innerHTML = userData['signedPetitions'].length;
+                console.log(userData['signedPetitions'].length);
+                // Update progress bar
+                const progress = (userData.signed / petitions.length) * 100;
+                //document.getElementById('petition-progress').style.width = `${progress}%`;
             } catch (error) {
                 console.error('Detailed error:', error);
                 alert('Failed to load petitions. Please make sure the server is running.');
             }
-        }
+        } 
+
+      
 
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('petition-modal');
             if (event.target === modal) {
                 closePetitionModal();
-            }
-        }
-
-        // Update your existing signPetition function to close the modal after signing
-        async function signPetition(petitionId) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/petitions/sign`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: currentUser,
-                        petitionId: petitionId
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                loadModalPetitions(); // Refresh the modal list
-                loadPetitions(); // Refresh the main petitions list if it exists
-            } catch (error) {
-                console.error('Failed to sign petition:', error);
-                alert('Failed to sign petition. Please try again.');
-            }
+            } 
         }
     </script>
 </body>
