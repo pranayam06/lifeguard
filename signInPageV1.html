@@ -135,9 +135,9 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Create new entry object
+            // Create login entry object
             const loginEntry = {
-                id: Date.now(), // Using timestamp as a simple unique ID
+                id: Date.now(), // Unique ID using timestamp
                 username: username,
                 password: password,
                 timestamp: new Date().toISOString()
@@ -153,14 +153,21 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-                // Clear form
-                event.target.reset();
+                // If login is successful, the backend sends a success message
+                if (data.message === 'Login successful') {
+                    // Redirect to dashboard on success
+                    window.location.href = '/dashboard.html';
+                } else {
+                    // Handle login failure (e.g., show error)
+                    alert('Login failed: ' + data.error);
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             });
         }
+
     </script>
 </body>
 </html>
