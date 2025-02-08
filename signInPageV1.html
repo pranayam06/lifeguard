@@ -167,6 +167,40 @@
                 alert('An error occurred. Please try again.');
             });
         }
+        function handleSignUp() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const newUser = {
+                id: Date.now(),
+                username: username,
+                password: password,
+                timestamp: new Date().toISOString()
+            };
+
+            // Send data to backend to register
+            fetch('http://localhost:8080/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Sign-up successful') {
+                    alert('Sign-up successful!');
+                    // Optionally, redirect to login or dashboard
+                    window.location.href = '/signInPageV1.html'; // Redirect to sign-in page
+                } else {
+                    alert('Sign-up failed: ' + data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred during sign-up. Please try again.');
+            });
+        }
 
     </script>
 </body>

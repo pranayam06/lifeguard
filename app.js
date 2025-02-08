@@ -41,12 +41,6 @@ function addData(newEntry) {
     writeData(data);
     return data;
 }
-
-// API Endpoints
-/*app.post('/login', (req, res) => {
-    console.log('Received login attempt:', req.body);
-    res.json({ message: 'Login received' });
-});*/
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
@@ -61,6 +55,11 @@ app.post('/login', (req, res) => {
         // If not, respond with an error message
         res.status(401).json({ error: 'Invalid username or password' });
     }
+});
+// API Endpoints
+app.post('/login', (req, res) => {
+    console.log('Received login attempt:', req.body);
+    res.json({ message: 'Login received' });
 });
 
 // Add new endpoint to add data
