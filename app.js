@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const path = require('path');
 const app = express();
 const port = 8080;
 const filePath = 'data.json';
@@ -9,7 +8,6 @@ const filePath = 'data.json';
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
 
 // File operations functions
 function readData() {
@@ -41,23 +39,37 @@ function addData(newEntry) {
     writeData(data);
     return data;
 }
+// ... existing code ...
+
+// Add a root route handler
+app.get('/', (req, res) => {
+    res.json({ 
+        message: 'Welcome to the API',
+        endpoints: {
+            'GET /data': 'Get all data',
+            'POST /data': 'Add new data',
+            'POST /login': 'Login endpoint'
+        }
+    });
+});
+
+// ... existing code ...
 
 // API Endpoints
-/*app.post('/login', (req, res) => {
-    console.log('Received login attempt:', req.body);
-    res.json({ message: 'Login received' });
-});*/
-
 app.post('/login', (req, res) => {
+    console.log('Received login attempt:', req.body);
     const { username, password } = req.body;
 
-    res.status(401).json({ error: 'Invalid username or password' });
+    const users = readData(); // Read user data from file
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        res.json({ message: 'Login successful', user: { username: user.username } });
+    } else {
+        res.status(401).json({ error: 'Invalid credentials' }); // Return error if credentials are wrong
+    }
 });
-// API Endpoints
-app.post('/login', (req, res) => {
-    console.log('Received login attempt:', req.body);
-    res.json({ message: 'Login received' });
-});
+
 
 // Add new endpoint to add data
 app.post('/data', (req, res) => {
@@ -78,11 +90,6 @@ app.get('/data', (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Failed to read data' });
     }
-});
-
-// Add this route to serve the HTML file
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../Desktop/signInPageV1.html'));
 });
 
 app.listen(port, () => {
