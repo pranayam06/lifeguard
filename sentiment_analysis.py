@@ -172,19 +172,39 @@ print(news_articles_df.head(n=16))
 
 sia = SentimentIntensityAnalyzer() 
 
-print(sia.polarity_scores(news_articles_df['combined_text'][0]))
-
-news_articles_df['compound'] = ""
-
-for index,row in news_articles_df.iterrows():
-    comb_text = row['combined_text'] 
-    row['compound'] = sia.polarity_scores(comb_text)['compound']
-    print(sia.polarity_scores(comb_text)['compound'])  
-    print (row['compound'])
 
 
+news_articles_df['compound'] = 0.0
+news_articles_df['pos'] = 0.0
+news_articles_df['neg'] = 0.0
+news_articles_df['neu'] = 0.0
+
+# Compute sentiment scores
+for index, row in news_articles_df.iterrows():
+    comb_text = row['combined_text']
+    sentiment_scores = sia.polarity_scores(comb_text)
+    
+    # Correctly assign values to the DataFrame
+    news_articles_df.at[index, 'compound'] = sentiment_scores['compound']
+    news_articles_df.at[index, 'pos'] = sentiment_scores['pos']
+    news_articles_df.at[index, 'neg'] = sentiment_scores['neg']
+    news_articles_df.at[index, 'neu'] = sentiment_scores['neu']
+
+# news_articles_df.to_csv('data/news_articles_clean.csv', index = False)
+
+
+
+for index,row in news_articles_df.iterrows(): 
+    print(row['compound'])
 
     
 
 
-    
+import plotly.express as px  
+
+date_sent_df = pd.DataFrame({"Date": news_articles_df['pub_date'], "Sentiment": news_articles_df['compound']}) 
+
+date_sent_df = date_sent_df.sort_values(by='Date')
+
+fig = px.line(date_sent_df, x="Date", y="Sentiment", markers=True, title= "News Title Senitments")
+fig.show()
