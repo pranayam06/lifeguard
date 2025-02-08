@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFEGUARD - Trans Rights Rapid Response Hub</title>
+    <style>
+        :root {
+            --primary: #00a6fb;
+            --secondary: #ff69b4;
+            --dark: #1a1a1a;
+            --light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background: var(--secondary);
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            background: #eee;
+            margin: 1rem 0;
+        }
+
+        .twitter-feed {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        /* Add styles for emergency button */
+        .emergency-button {
+            background: #ff4444;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LIFEGUARD</h1>
+        <p>Your Rapid Response Hub for Trans Rights</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card" style="grid-column: 1 / -1; text-align: center;">
+                <h2>🆘 Need Immediate Help?</h2>
+                <a href="tel:+18664887386" class="button emergency-button">
+                    Call Trans Lifeline: 1-866-488-7386
+                </a>
+            </div>
+
+            <div class="card">
+                <h2>🚨 Latest Updates</h2>
+                <div class="twitter-feed">
+                    <a class="twitter-timeline" href="https://twitter.com/ACLU?ref_src=twsrc%5Etfw">ACLU Updates</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📍 Find Help Near You</h2>
+                <div id="map"></div>
+                <select id="state-selector">
+                    <option value="">Select your state</option>
+                </select>
+                <div id="local-resources"></div>
+            </div>
+
+            <div class="card">
+                <h2>📢 Take Action</h2>
+                <a href="#" class="button">Contact Representatives</a>
+                <a href="https://action.aclu.org/give/now" class="button">Donate to ACLU</a>
+                <a href="https://www.hrc.org/support" class="button">Support HRC</a>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Know Your Rights</h2>
+                <h3>Healthcare Access</h3>
+                <p>Under the Affordable Care Act, discrimination based on gender identity is prohibited in healthcare settings.</p>
+                
+                <h3>Workplace Rights</h3>
+                <p>The Supreme Court's Bostock decision protects LGBTQ+ individuals from workplace discrimination.</p>
+                
+                <h3>Public Accommodations</h3>
+                <p>Rights vary by state. Contact local LGBTQ+ organizations for specific guidance.</p>
+            </div>
+        </div>
+    </div>
+
+    <script async src="https://platform.twitter.com/widgets.js"></script>
+    <script>
+        // Expand state resources data
+        const stateResources = {
+            "CA": {
+                "legal": ["Transgender Law Center", "Lambda Legal Western Regional Office"],
+                "shelters": ["Los Angeles LGBT Center", "SF LGBT Center"],
+                "advocacy": ["Equality California", "Trans Can Work"],
+                "hotlines": ["Trans Lifeline: 1-866-488-7386", "Trevor Project: 1-866-488-7386"]
+            },
+            "NY": {
+                "legal": ["Transgender Legal Defense & Education Fund", "NYCLU"],
+                "shelters": ["The Ali Forney Center", "Trinity Place Shelter"],
+                "advocacy": ["New York Trans Advocacy Group", "Gender Equality NY"],
+                "hotlines": ["Trans Lifeline: 1-866-488-7386", "NYC Anti-Violence Project: 212-714-1141"]
+            }
+            // Add more states...
+        };
+
+        // Initialize state selector
+        const states = Object.keys(stateResources);
+        const selector = document.getElementById('state-selector');
+        states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            selector.appendChild(option);
+        });
+
+        selector.addEventListener('change', (e) => {
+            const state = e.target.value;
+            const resources = stateResources[state];
+            const container = document.getElementById('local-resources');
+            
+            if (resources) {
+                container.innerHTML = `
+                    <h3>Resources in ${state}</h3>
+                    <h4>Legal Aid:</h4>
+                    <ul>${resources.legal.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Shelters:</h4>
+                    <ul>${resources.shelters.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Advocacy Groups:</h4>
+                    <ul>${resources.advocacy.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Hotlines:</h4>
+                    <ul>${resources.hotlines.map(org => `<li>${org}</li>`).join('')}</ul>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
