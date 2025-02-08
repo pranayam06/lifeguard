@@ -41,20 +41,17 @@ function addData(newEntry) {
     writeData(data);
     return data;
 }
+
+// API Endpoints
+/*app.post('/login', (req, res) => {
+    console.log('Received login attempt:', req.body);
+    res.json({ message: 'Login received' });
+});*/
+
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    const users = readData(); // Assuming this reads data from your 'data.json'
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        // If the username and password match, respond with a success message
-
-        res.json({ message: 'Login successful', username: user.username });
-    } else {
-        // If not, respond with an error message
-        res.status(401).json({ error: 'Invalid username or password' });
-    }
+    res.status(401).json({ error: 'Invalid username or password' });
 });
 // API Endpoints
 app.post('/login', (req, res) => {
