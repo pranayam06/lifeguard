@@ -107,101 +107,89 @@
 
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>LIFEGUARD</h1>
-            <p>A Rapid Response Hub for Trans Rights</p>
+    <body>
+        <div class="login-container">
+            <div class="login-header">
+                <h1>LIFEGUARD</h1>
+                <p>A Rapid Response Hub for Trans Rights</p>
+            </div>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="login-button">Login</button>
+                    <button type="button" class="signup-button" onclick="handleSignUp()">Sign Up</button>
+                </div>
+            </form>
         </div>
-        <form class="login-form" onsubmit="handleLogin(event)">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="button-container">
-                <button type="submit" class="login-button">Login</button>
-                <button type="button" class="signup-button">Sign Up</button>
-            </div>
-        </form>
-    </div>
-    <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Create login entry object
-            const loginEntry = {
-                id: Date.now(), // Unique ID using timestamp
-                username: username,
-                password: password,
-                timestamp: new Date().toISOString()
-            };
-
-            // Send data to backend
-            fetch('http://localhost:8080/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(loginEntry)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // If login is successful, the backend sends a success message
-                if (data.message === 'Login successful') {
-                    // Redirect to dashboard on success
-                    window.location.href = '/dashboard.html';
-                } else {
-                    // Handle login failure (e.g., show error)
-                    alert('Login failed: ' + data.error);
+    
+        <script>
+            function handleLogin(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                const loginEntry = {
+                    username: username,
+                    password: password
+                };
+    
+                fetch('http://localhost:8080/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginEntry)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Login successful') {
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        alert('Login failed: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            }
+    
+            function handleSignUp() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (!username || !password) {
+                    alert('Please enter a username and password.');
+                    return;
                 }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
-        }
-        function handleSignUp() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            const newUser = {
-                id: Date.now(),
-                username: username,
-                password: password,
-                timestamp: new Date().toISOString()
-            };
-
-            // Send data to backend to register
-            fetch('http://localhost:8080/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newUser)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Sign-up successful') {
-                    alert('Sign-up successful!');
-                    // Optionally, redirect to login or dashboard
-                    window.location.href = '/signInPageV1.html'; // Redirect to sign-in page
-                } else {
-                    alert('Sign-up failed: ' + data.error);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred during sign-up. Please try again.');
-            });
-        }
-
-    </script>
-</body>
+    
+                const newUser = {
+                    id: Date.now(),
+                    username: username,
+                    password: password
+                };
+    
+                fetch('http://localhost:8080/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newUser)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Sign-up successful! You can now log in.');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Sign-up failed. Please try again.');
+                });
+            }
+        </script>
+    </body>
+        
 </html>
