@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFEGUARD - Trans Rights Rapid Response Hub</title>
+    <style>
+        :root {
+            --primary: #00a6fb;
+            --secondary: #ff69b4;
+            --dark: #1a1a1a;
+            --light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background: var(--secondary);
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            background: #eee;
+            margin: 1rem 0;
+        }
+
+        .twitter-feed {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        /* Add styles for emergency button */
+        .emergency-button {
+            background: #ff4444;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .petition-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .petition-item.signed {
+            border-left: 4px solid var(--secondary);
+        }
+
+        .sign-button {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .sign-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            color: black;
+        }
+
+        #modal-petitions-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LIFEGUARD</h1>
+        <p>Your Rapid Response Hub for Trans Rights</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card" style="grid-column: 1 / -1; text-align: center;">
+                <h2>🆘 Need Immediate Help?</h2>
+                <a href="tel:+18664887386" class="button emergency-button">
+                    Call Trans Lifeline: 1-866-488-7386
+                </a>
+            </div>
+
+            <div class="card">
+                <h2>🚨 Latest Updates</h2>
+                <div class="twitter-feed">
+                    <a class="twitter-timeline" href="https://twitter.com/ACLU?ref_src=twsrc%5Etfw">ACLU Updates</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📍 Find Help Near You</h2>
+                <div id="map"></div>
+                <select id="state-selector">
+                    <option value="">Select your state</option>
+                </select>
+                <div id="local-resources"></div>
+            </div>
+
+            <div class="card">
+                <h2>📢 Take Action</h2>
+                <a href="#" class="button">Contact Representatives</a>
+                <a href="https://action.aclu.org/give/now" class="button">Donate to ACLU</a>
+                <a href="https://www.hrc.org/support" class="button">Support HRC</a>
+            </div>
+
+            <div class="card">
+                <h2>⚖️ Know Your Rights</h2>
+                <h3>Healthcare Access</h3>
+                <p>Under the Affordable Care Act, discrimination based on gender identity is prohibited in healthcare settings.</p>
+                
+                <h3>Workplace Rights</h3>
+                <p>The Supreme Court's Bostock decision protects LGBTQ+ individuals from workplace discrimination.</p>
+                
+                <h3>Public Accommodations</h3>
+                <p>Rights vary by state. Contact local LGBTQ+ organizations for specific guidance.</p>
+            </div> 
+
+            <div class="card">
+                <h2> 📊 Sentiment Analysis </h2>
+                <iframe src="graph1.html" ></iframe>
+                <iframe src="graph2.html" ></iframe>
+            </div> 
+
+            <div class="card">
+                <h2>✍️ Active Petitions</h2>
+                <div id="petitions-list"></div>
+                <div class="petition-stats">
+                    <h3>Your Impact</h3>
+                    <div class="progress-container">
+                        <div id="petition-progress" class="progress-bar"></div>
+                    </div>
+                    <p>You've signed <span id="signed-count">0</span> out of <span id="total-count">0</span> petitions</p>
+                </div>
+                <button onclick="openPetitionModal()" class="button">Sign a Petition</button>
+            </div>
+
+            <!-- Add Modal for Petitions -->
+            <div id="petition-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closePetitionModal()">&times;</span>
+                    <h2>Available Petitions</h2>
+                    <div id="modal-petitions-list"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script async src="https://platform.twitter.com/widgets.js"></script>
+    <script>
+        // Add this at the start of your script section
+        const API_BASE_URL = 'http://localhost:3000';
+
+        // Add this to handle current user
+        let currentUser = 'demo'; // Replace with actual user authentication
+
+        // Expand state resources data
+        const stateResources = {
+            "CA": {
+                "legal": ["Transgender Law Center", "Lambda Legal Western Regional Office"],
+                "shelters": ["Los Angeles LGBT Center", "SF LGBT Center"],
+                "advocacy": ["Equality California", "Trans Can Work"],
+                "hotlines": ["Trans Lifeline: 1-866-488-7386", "Trevor Project: 1-866-488-7386"]
+            },
+            "NY": {
+                "legal": ["Transgender Legal Defense & Education Fund", "NYCLU"],
+                "shelters": ["The Ali Forney Center", "Trinity Place Shelter"],
+                "advocacy": ["New York Trans Advocacy Group", "Gender Equality NY"],
+                "hotlines": ["Trans Lifeline: 1-866-488-7386", "NYC Anti-Violence Project: 212-714-1141"]
+            }
+            // Add more states...
+        };
+
+        // Initialize state selector
+        const states = Object.keys(stateResources);
+        const selector = document.getElementById('state-selector');
+        states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            selector.appendChild(option);
+        });
+
+        selector.addEventListener('change', (e) => {
+            const state = e.target.value;
+            const resources = stateResources[state];
+            const container = document.getElementById('local-resources');
+            
+            if (resources) {
+                container.innerHTML = `
+                    <h3>Resources in ${state}</h3>
+                    <h4>Legal Aid:</h4>
+                    <ul>${resources.legal.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Shelters:</h4>
+                    <ul>${resources.shelters.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Advocacy Groups:</h4>
+                    <ul>${resources.advocacy.map(org => `<li>${org}</li>`).join('')}</ul>
+                    <h4>Hotlines:</h4>
+                    <ul>${resources.hotlines.map(org => `<li>${org}</li>`).join('')}</ul>
+                `;
+            }
+        });
+
+        // Petition handling code
+        async function loadPetitions() {
+            try {
+                const response = await fetch('http://localhost:3000/petitions');
+                const petitions = await response.json();
+                const userResponse = await fetch(`http://localhost:3000/petitions/user/${currentUser}`);
+                const userData = await userResponse.json();
+                
+                const petitionsList = document.getElementById('petitions-list');
+                petitionsList.innerHTML = '';
+                
+                petitions.forEach(petition => {
+                    const isSigned = userData.signedPetitions.includes(petition.id);
+                    const petitionElement = document.createElement('div');
+                    petitionElement.className = `petition-item ${isSigned ? 'signed' : ''}`;
+                    petitionElement.innerHTML = `
+                        <h3>${petition.title}</h3>
+                        <a href="${petition.url}" target="_blank">View Petition</a>
+                        <button 
+                            class="sign-button" 
+                            onclick="signPetition(${petition.id})"
+                            ${isSigned ? 'disabled' : ''}
+                        >
+                            ${isSigned ? 'Signed ✓' : 'Sign Petition'}
+                        </button>
+                    `;
+                    petitionsList.appendChild(petitionElement);
+                });
+
+                // Update statistics
+                document.getElementById('signed-count').textContent = userData.stats.totalSigned;
+                document.getElementById('total-count').textContent = petitions.length;
+                
+                // Update progress bar
+                const progress = (userData.stats.totalSigned / petitions.length) * 100;
+                document.getElementById('petition-progress').style.width = `${progress}%`;
+            } catch (error) {
+                console.error('Failed to load petitions:', error);
+            }
+        }
+
+        async function signPetition(petitionId) {
+            try {
+                const response = await fetch('http://localhost:3000/petitions/sign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: currentUser,
+                        petitionId: petitionId
+                    })
+                });
+                
+                if (response.ok) {
+                    loadPetitions(); // Refresh the petitions list
+                }
+            } catch (error) {
+                console.error('Failed to sign petition:', error);
+            }
+        }
+
+        // Load petitions when the page loads
+        // You'll need to call this after user authentication
+        // loadPetitions();
+
+        function openPetitionModal() {
+            const modal = document.getElementById('petition-modal');
+            modal.style.display = "block";
+            loadModalPetitions();
+        }
+
+        function closePetitionModal() {
+            const modal = document.getElementById('petition-modal');
+            modal.style.display = "none";
+        }
+
+        async function loadModalPetitions() {
+            try {
+                console.log('Fetching petitions...');
+                const response = await fetch(`${API_BASE_URL}/petitions`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const petitions = await response.json();
+                
+                console.log('Fetching user data...');
+                const userResponse = await fetch(`${API_BASE_URL}/petitions/user/${currentUser}`);
+                if (!userResponse.ok) {
+                    throw new Error(`HTTP error! status: ${userResponse.status}`);
+                }
+                const userData = await userResponse.json();
+                
+                const petitionsList = document.getElementById('modal-petitions-list');
+                petitionsList.innerHTML = '';
+                
+                petitions.forEach(petition => {
+                    const isSigned = userData.signedPetitions.includes(petition.id);
+                    const petitionElement = document.createElement('div');
+                    petitionElement.className = `petition-item ${isSigned ? 'signed' : ''}`;
+                    petitionElement.innerHTML = `
+                        <h3>${petition.title}</h3>
+                        <p>${petition.description || 'Support this important cause!'}</p>
+                        <a href="${petition.url}" target="_blank" class="button">View Details</a>
+                        <button 
+                            class="sign-button" 
+                            onclick="signPetition(${petition.id})"
+                            ${isSigned ? 'disabled' : ''}
+                        >
+                            ${isSigned ? 'Signed ✓' : 'Sign Now'}
+                        </button>
+                    `;
+                    petitionsList.appendChild(petitionElement);
+                });
+            } catch (error) {
+                console.error('Detailed error:', error);
+                alert('Failed to load petitions. Please make sure the server is running.');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('petition-modal');
+            if (event.target === modal) {
+                closePetitionModal();
+            }
+        }
+
+        // Update your existing signPetition function to close the modal after signing
+        async function signPetition(petitionId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/petitions/sign`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: currentUser,
+                        petitionId: petitionId
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                loadModalPetitions(); // Refresh the modal list
+                loadPetitions(); // Refresh the main petitions list if it exists
+            } catch (error) {
+                console.error('Failed to sign petition:', error);
+                alert('Failed to sign petition. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
