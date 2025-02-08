@@ -1,22 +1,14 @@
 import os
 import requests
 import pandas as pd 
-import re 
-import json
-import numpy as np
-import nltk
-nltk.download('stopwords') 
-nltk.download('wordnet')  
-nltk.download('punkt_tab')   
-
 from nltk.sentiment import SentimentIntensityAnalyzer 
-from tqdm.notebook import tqdm 
-nltk.download('vader_lexicon')
+import plotly.express as px   
+import math
 
 
 
-# Load API Key from environment variable (for security)
-#api_key = os.getenv('NEWSAPI_KEY')  # Set this in your system environment
+
+api_key = os.getenv('NEWSAPI_KEY')  #ADD YOUR API KEY
 
 api_key = "b77bfc225b154985b103e81c698ef753"
 
@@ -110,7 +102,6 @@ for index, row in news_articles_df.iterrows():
     news_articles_df.at[index, 'neu'] = sentiment_scores['neu']
 
 
-import plotly.express as px  
 
 date_sent_df = pd.DataFrame({
     "Date": news_articles_df['pub_date'], 
@@ -137,7 +128,6 @@ for index, row in news_articles_df.iterrows():
         mean_source[row["source"]].append(row["compound"])  # Append to list
 
 # Compute the average sentiment per source 
-import math
 mean_source_avg = {source: (math.floor((sum(values) / len(values)) * 100) / 100) for source, values in mean_source.items()}
 
 # Convert to DataFrame
