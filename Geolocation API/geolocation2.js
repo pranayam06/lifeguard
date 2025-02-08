@@ -86,6 +86,3 @@ function findHelpCenters(map, userLocation) {
       console.error("Error fetching data from Overpass API:", error);
     });
 }
-
-// Expose the initMap function to the global scope
-window.initMap = initMap;
