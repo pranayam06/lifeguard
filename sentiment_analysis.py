@@ -112,12 +112,22 @@ for index, row in news_articles_df.iterrows():
 
 import plotly.express as px  
 
-date_sent_df = pd.DataFrame({"Date": news_articles_df['pub_date'], "Sentiment": news_articles_df['compound']}) 
+date_sent_df = pd.DataFrame({
+    "Date": news_articles_df['pub_date'], 
+    "Sentiment": news_articles_df['compound'], 
+    "Title": news_articles_df['title'], 
+    "Url": news_articles_df['url']
+}).sort_values(by='Date')
 
-date_sent_df = date_sent_df.sort_values(by='Date')
+# Plot sentiment over time with Title and URL as tooltips
+fig = px.line(date_sent_df, x="Date", y="Sentiment", markers=True, title="News Title Sentiments",
+              width=600, height=400, 
+              labels={"Sentiment": "Sentiment Score"},
+              hover_data={"Title": True, "Url": True})  # Include Title & URL in tooltip
 
-fig = px.line(date_sent_df, x="Date", y="Sentiment", markers=True, title= "News Title Senitments")
-fig.show() 
+# Show the plot
+fig.show()
+
 mean_source = {}
 
 for index, row in news_articles_df.iterrows(): 
@@ -126,13 +136,20 @@ for index, row in news_articles_df.iterrows():
     else:
         mean_source[row["source"]].append(row["compound"])  # Append to list
 
-# Compute the average sentiment per source
-mean_source_avg = {source: sum(values) / len(values) for source, values in mean_source.items()}
+# Compute the average sentiment per source 
+import math
+mean_source_avg = {source: (math.floor((sum(values) / len(values)) * 100) / 100) for source, values in mean_source.items()}
 
 # Convert to DataFrame
 source_sent_avg_df = pd.DataFrame(list(mean_source_avg.items()), columns=['Source', 'Average Sentiment'])
+source_sent_avg_df["Color"] = source_sent_avg_df["Average Sentiment"].apply(lambda x: "negative" if x < 0 else "positive")
 
-# Plot using Plotly
-fig = px.bar(source_sent_avg_df, x='Average Sentiment', y='Source', title="Average Sentiment by Source") 
-fig.update_layout(xaxis_range=[-1,1])
+# Plot using Plotly with a Red-Yellow-Green Scale (Diverging)
+fig = px.bar(source_sent_avg_df, x='Average Sentiment', y='Source', title="Average Sentiment by Source",
+             width=600, height=400,
+             color="Average Sentiment", 
+             color_continuous_scale=["red", "yellow", "green"],  # Diverging scale
+             range_color=[-1, 1])  # Ensures the scale maps -1 to red and 1 to green
+
+fig.update_layout(xaxis_range=[-1, 1])
 fig.show()
