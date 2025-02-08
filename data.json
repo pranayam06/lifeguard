@@ -1,12 +1,41 @@
 [
   {
-    "id": 1,
-    "username": "testUser",
-    "password": "testPassword"
-  }, 
+    "username": "riya",
+    "password": "riya",
+    "signed": 0,
+    "zipcode": 0
+  },
   {
-      "id": 2,
-      "username": "riya",
-      "password": "e"
+    "username": "rohan",
+    "password": "rohan",
+    "signed": 0,
+    "zipcode": 0
+  },
+  {
+    "username": "pranaya",
+    "password": "pranaya",
+    "signed": 0,
+    "zipcode": 0
+  },
+  {
+    "username": "vaish",
+    "password": "vaish",
+    "signed": 0,
+    "zipcode": 0
+  },
+  {
+    "id": 1739007643807,
+    "username": "rrrrrr",
+    "password": "rrrrr"
+  },
+  {
+    "id": 1739007679101,
+    "username": "hellohello",
+    "password": "i"
+  },
+  {
+    "id": 1739007742426,
+    "username": "hellohello",
+    "password": "ii"
   }
 ]
