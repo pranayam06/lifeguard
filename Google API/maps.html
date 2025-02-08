@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Help Near You</title>
+    <style>
+      #map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Find Help Near You</h1>
+    <div id="map"></div>
+
+    <script src="geolocation.js"></script>
+    <script>
+  function loadScript() {
+    const script = document.createElement("script");
+    script.src =
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyB9vzQHd5leGa8Nzv9VIvDv-seEhnyOCAA&callback=initMap&libraries=marker,places&loading=async";
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  window.onload = loadScript;
+</script>
+  </body>
+</html>
