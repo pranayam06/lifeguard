@@ -69,6 +69,8 @@
             width: 100%;
             background: #eee;
             margin: 1rem 0;
+            position: relative;
+            z-index: 1;
         }
 
         .twitter-feed {
@@ -138,7 +140,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000; /* Ensure modal is above the map */
             left: 0;
             top: 0;
             width: 100%;
@@ -203,28 +205,10 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="grid-column: span 2;">
                 <h2>📍 Find Help Near You</h2>
                 <div id="map"></div>
-                <select id="state-selector">
-                    <option value="">Select your state</option>
-                </select>
-                <div id="local-resources"></div>
             </div>
-
-            <div class="card">
-                <h2>📢 Take Action</h2>
-                <a href="#" class="button">Contact Representatives</a>
-                <a href="https://action.aclu.org/give/now" class="button">Donate to ACLU</a>
-                <a href="https://www.hrc.org/support" class="button">Support HRC</a>
-            </div>
-
-            <div class="card">
-                <h2> 📊 Sentiment Analysis </h2>
-                <iframe src="graph1.html" ></iframe>
-                <iframe src="graph2.html" ></iframe>
-            </div> 
-
             <div class="card">
                 <h2>✍️ Active Petitions</h2>
                 <div id="petitions-list"></div>
@@ -246,11 +230,14 @@
                     <div id="modal-petitions-list"></div>
                 </div>
             </div>
-
+            <div class="card" style="grid-column: span 2;">
+                <h2> 📊 Sentiment Analysis </h2>
+                <iframe src="graph1.html" ></iframe>
+                <iframe src="graph2.html" ></iframe>
+            </div> 
         </div>
     </div>
 
-    
     <!-- Load Leaflet JS -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -265,7 +252,6 @@
     </script>
     <script async src="https://platform.twitter.com/widgets.js"></script>
     <script>
-        
         // Add this at the start of your script section
         const API_BASE_URL = 'http://localhost:3000';
 
