@@ -86,3 +86,5 @@ function initMap() {
       console.error("Error fetching data from Overpass API:", error);
     });
 }
+
+window.initMap = initMap;
