@@ -10,7 +10,7 @@ import math
 
 api_key = os.getenv('NEWSAPI_KEY')  #ADD YOUR API KEY
 
-api_key = "b77bfc225b154985b103e81c698ef753"
+api_key = "1e1c1c6b6d24456597044a11ca4fd21a"
 
 if not api_key:
     raise ValueError("API Key is missing. Set NEWSAPI_KEY as an environment variable.")
@@ -111,13 +111,13 @@ date_sent_df = pd.DataFrame({
 }).sort_values(by='Date')
 
 # Plot sentiment over time with Title and URL as tooltips
-fig = px.line(date_sent_df, x="Date", y="Sentiment", markers=True, title="News Title Sentiments",
+fig1 = px.line(date_sent_df, x="Date", y="Sentiment", markers=True, title="News Title Sentiments",
               width=600, height=400, 
               labels={"Sentiment": "Sentiment Score"},
               hover_data={"Title": True, "Url": True})  # Include Title & URL in tooltip
 
 # Show the plot
-fig.show()
+fig1.show()
 
 mean_source = {}
 
@@ -135,11 +135,16 @@ source_sent_avg_df = pd.DataFrame(list(mean_source_avg.items()), columns=['Sourc
 source_sent_avg_df["Color"] = source_sent_avg_df["Average Sentiment"].apply(lambda x: "negative" if x < 0 else "positive")
 
 # Plot using Plotly with a Red-Yellow-Green Scale (Diverging)
-fig = px.bar(source_sent_avg_df, x='Average Sentiment', y='Source', title="Average Sentiment by Source",
+fig2 = px.bar(source_sent_avg_df, x='Average Sentiment', y='Source', title="Average Sentiment by Source",
              width=600, height=400,
              color="Average Sentiment", 
              color_continuous_scale=["red", "yellow", "green"],  # Diverging scale
              range_color=[-1, 1])  # Ensures the scale maps -1 to red and 1 to green
 
-fig.update_layout(xaxis_range=[-1, 1])
-fig.show()
+fig2.update_layout(xaxis_range=[-1, 1])
+fig2.show() 
+
+
+fig1.write_html("graph1.html")
+fig2.write_html("graph2.html")
+
