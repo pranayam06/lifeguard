@@ -258,52 +258,6 @@
         // Add this to handle current user
         let currentUser = 'demo'; // Replace with actual user authentication
 
-        // Expand state resources data
-        const stateResources = {
-            "CA": {
-                "legal": ["Transgender Law Center", "Lambda Legal Western Regional Office"],
-                "shelters": ["Los Angeles LGBT Center", "SF LGBT Center"],
-                "advocacy": ["Equality California", "Trans Can Work"],
-                "hotlines": ["Trans Lifeline: 1-866-488-7386", "Trevor Project: 1-866-488-7386"]
-            },
-            "NY": {
-                "legal": ["Transgender Legal Defense & Education Fund", "NYCLU"],
-                "shelters": ["The Ali Forney Center", "Trinity Place Shelter"],
-                "advocacy": ["New York Trans Advocacy Group", "Gender Equality NY"],
-                "hotlines": ["Trans Lifeline: 1-866-488-7386", "NYC Anti-Violence Project: 212-714-1141"]
-            }
-            // Add more states...
-        };
-
-        // Initialize state selector
-        const states = Object.keys(stateResources);
-        const selector = document.getElementById('state-selector');
-        states.forEach(state => {
-            const option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            selector.appendChild(option);
-        });
-
-        selector.addEventListener('change', (e) => {
-            const state = e.target.value;
-            const resources = stateResources[state];
-            const container = document.getElementById('local-resources');
-            
-            if (resources) {
-                container.innerHTML = `
-                    <h3>Resources in ${state}</h3>
-                    <h4>Legal Aid:</h4>
-                    <ul>${resources.legal.map(org => `<li>${org}</li>`).join('')}</ul>
-                    <h4>Shelters:</h4>
-                    <ul>${resources.shelters.map(org => `<li>${org}</li>`).join('')}</ul>
-                    <h4>Advocacy Groups:</h4>
-                    <ul>${resources.advocacy.map(org => `<li>${org}</li>`).join('')}</ul>
-                    <h4>Hotlines:</h4>
-                    <ul>${resources.hotlines.map(org => `<li>${org}</li>`).join('')}</ul>
-                `;
-            }
-        });
 
         // Petition handling code
         async function loadPetitions() {
