@@ -2,69 +2,99 @@
   {
     "username": "riya",
     "password": "riya",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "username": "rohan",
     "password": "rohan",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "username": "pranaya",
     "password": "pranaya",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "username": "vaish",
     "password": "vaish",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "id": 1739007643807,
     "username": "rrrrrr",
     "password": "rrrrr",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "id": 1739007679101,
     "username": "hellohello",
     "password": "i",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "id": 1739007742426,
     "username": "hellohello",
     "password": "ii",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "id": 1739011067395,
     "username": "djknfi",
     "password": "dsf",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
   },
   {
     "id": 1739011067395,
     "username": "djknfi",
     "password": "dsf",
-    "signed": 0,
-    "zipcode": 0,
-    "signedPetitions": []
+    "signed": 0
+  },
+  {
+    "id": 1739044866445,
+    "username": "riyakkkk",
+    "password": "ieueye",
+    "signed": 0
+  },
+  {
+    "id": 1739044866445,
+    "username": "riyakkkk",
+    "password": "ieueye",
+    "signed": 0
+  },
+  {
+    "id": 1739045004359,
+    "username": "hellohellohello",
+    "password": "hi",
+    "signed": 0
+  },
+  {
+    "id": 1739045004359,
+    "username": "hellohellohello",
+    "password": "hi",
+    "signed": 0
+  },
+  {
+    "id": 1739045081713,
+    "username": "qq",
+    "password": "q",
+    "signed": 0
+  },
+  {
+    "id": 1739045081713,
+    "username": "qq",
+    "password": "q",
+    "signed": 0
+  },
+  {
+    "id": 1739045423859,
+    "username": "kk",
+    "password": "kk",
+    "signed": 0
+  },
+  {
+    "id": 1739045423859,
+    "username": "kk",
+    "password": "kk",
+    "signed": 0
   }
 ]

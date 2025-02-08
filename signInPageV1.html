@@ -128,6 +128,8 @@
                     <button type="submit" class="login-button">Login</button>
                     <button type="button" class="signup-button" onclick="handleSignUp()">Sign Up</button>
                 </div>
+                <!-- Modal for Petitions -->
+
             </form>
         </div>
     
@@ -143,7 +145,7 @@
                     password: password
                 };
     
-                fetch('http://localhost:8080/login', {
+                fetch('http://localhost:3000/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(loginEntry)
@@ -174,10 +176,11 @@
                 const newUser = {
                     id: Date.now(),
                     username: username,
-                    password: password
+                    password: password,
+                    signed:0
                 };
     
-                fetch('http://localhost:8080/data', {
+                fetch('http://localhost:3000/data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newUser)
@@ -197,11 +200,12 @@
                     const newUser = {
                     id: Date.now(),
                     username: username,
-                    password: password
+                    password: password,
+                    signed: 0
                     }
                 };
     
-                fetch('http://localhost:8080/data', {
+                fetch('http://localhost:3000/data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newUser)
